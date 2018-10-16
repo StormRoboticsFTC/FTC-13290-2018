@@ -118,7 +118,6 @@ public class TestOpv2 extends LinearOpMode {
                 rightDrive.setPower(rightPowerForward);
             }
 
-
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerForward, rightPowerForward);
