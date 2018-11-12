@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TestOpv2", group="Linear Opmode")
+@TeleOp(name="TeleOpv1.01", group="Linear Opmode")
 //@Disabled
 public class TestOpv2 extends LinearOpMode {
 
@@ -97,7 +97,7 @@ public class TestOpv2 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            outtakeServo.setPosition(0);
+            outtakeServo.setPosition(-1);
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPowerForward;
             double rightPowerForward;
@@ -148,7 +148,7 @@ public class TestOpv2 extends LinearOpMode {
             }
 
             if (gamepad2.dpad_left = true) {
-                outtakeServo.setPosition(1);
+                outtakeServo.setPosition(0);
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
