@@ -88,7 +88,7 @@ public class TestOpv2 extends LinearOpMode {
         leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
-        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
@@ -142,9 +142,14 @@ public class TestOpv2 extends LinearOpMode {
 
             if (gamepad2.right_bumper = true) {
                 intakeMotor.setPower(1);
+            } else {
+                intakeMotor.setPower(0);
             }
-            else if (gamepad2.left_bumper = true) {
+
+            if (gamepad2.left_bumper = true) {
                 outtakeMotor.setPower(1);
+            }else{
+                outtakeMotor.setPower(0);
             }
 
             if (gamepad2.dpad_left = true) {
