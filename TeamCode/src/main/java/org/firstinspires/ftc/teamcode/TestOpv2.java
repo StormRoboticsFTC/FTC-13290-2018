@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -57,7 +59,12 @@ public class TestOpv2 extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
+    private DcMotor leftDriveBack = null;
+    private DcMotor rightDriveBack = null;
     private DcMotor rightDrive = null;
+    private DcMotor intakeMotor = null;
+    private DcMotor outtakeMotor = null;
+    private Servo outtakeServo = null;
 
     @Override
     public void runOpMode() {
@@ -68,12 +75,21 @@ public class TestOpv2 extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
+        intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
+        outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
+        outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+        outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -81,7 +97,7 @@ public class TestOpv2 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
+            outtakeServo.setPosition(0);
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPowerForward;
             double rightPowerForward;
@@ -109,15 +125,31 @@ public class TestOpv2 extends LinearOpMode {
             // Send calculated power to wheels
             if (gamepad1.right_trigger > 0) {
                 leftDrive.setPower(leftPowerForward);
+                leftDriveBack.setPower(leftPowerForward);
                 rightDrive.setPower(rightPowerForward);
+                rightDriveBack.setPower(rightPowerForward);
             } else if (gamepad1.left_trigger > 0) {
                 leftDrive.setPower(leftPowerReverse);
+                leftDriveBack.setPower(leftPowerReverse);
                 rightDrive.setPower(rightPowerReverse);
+                rightDriveBack.setPower(rightPowerReverse);
             } else {
                 leftDrive.setPower(leftPowerForward);
+                leftDriveBack.setPower(leftPowerForward);
                 rightDrive.setPower(rightPowerForward);
+                rightDriveBack.setPower(rightPowerForward);
             }
 
+            if (gamepad2.right_bumper = true) {
+                intakeMotor.setPower(1);
+            }
+            else if (gamepad2.left_bumper = true) {
+                outtakeMotor.setPower(1);
+            }
+
+            if (gamepad2.dpad_left = true) {
+                outtakeServo.setPosition(1);
+            }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerForward, rightPowerForward);
