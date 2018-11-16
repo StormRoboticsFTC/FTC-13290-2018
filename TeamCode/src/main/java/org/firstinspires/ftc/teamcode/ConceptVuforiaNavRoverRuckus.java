@@ -288,6 +288,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             String currentImage = null;
+            driveForward(1,500);
+            turnLeft(1,1000);
+            driveForward(1,1000);
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     currentImage = trackable.getName();
@@ -312,22 +315,18 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
                 if (currentImage == "Blue-Rover"){
-                    driveForward(0.5,200);
                     turnRight(0.5,100);
-                    driveForward(0.5,400);
+                    driveForward(0.5,1000);
                 }
                 if (currentImage == "Red-Footprint"){
-                    driveForward(0.5,200);
                     turnLeft(0.5,100);
                     driveForward(0.5,400);
                 }
                 if (currentImage == "Front-Craters"){
-                    driveForward(0.5,200);
                     turnRight(0.5,100);
                     driveForward(0.5,400);
                 }
                 if (currentImage == "Back-Space"){
-                    driveForward(0.5,200);
                     turnLeft(0.5,100);
                     driveForward(0.5,400);
                 }
