@@ -120,6 +120,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
     private Servo outtakeServo = null;
+
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
@@ -145,6 +146,26 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
+        intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
+        outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
+        outtakeServo = hardwareMap.servo.get("outtake_servo");
+
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -291,6 +312,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             driveForward(1,500);
             turnLeft(1,1000);
             driveForward(1,1000);
+
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     currentImage = trackable.getName();
