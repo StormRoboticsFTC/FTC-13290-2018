@@ -33,6 +33,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -92,7 +95,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Rover Nav", group ="Concept")
+@Autonomous(name="Vuforia Autonomous Navigation System", group ="Concept")
 //@Disabled
 public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
@@ -109,7 +112,14 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY = "ASQxnDP/////AAABmZKDlU8qYE5AsKZB24eTmZ11g2pruoCbAssBRVQ3lSpCC3CcmVUaJbLLKAqvOK1pr53UbpswNWkqXuyNNgbFXKZmQ8AGLur4fRcOIokYNyYdULKbpbtqteHSX6P6BjxjJnhWGHIhXqkDQsXZP986D4LmJaZDx4bjg9ZkqQd7bbv59UWmkbkd1gfTMHRWO8/fRvw+Z5tWbU+El65fPoLHvCuqYGv+vLkINbJ4inCDIWIqkvvun1GiYIaKRHf5ERn9wZsu4nLGOiCSO+2g49SzooY35JTmUjmnvXHRDpgQkWlDReR7owfoJN4PLwQzkczPtaWu3va8ME86AfGBv7Ii1sW1E6ZxEDSjB/gni2hn3g4o";
-
+    private ElapsedTime runtime = new ElapsedTime();
+    private DcMotor leftDrive = null;
+    private DcMotor leftDriveBack = null;
+    private DcMotor rightDriveBack = null;
+    private DcMotor rightDrive = null;
+    private DcMotor intakeMotor = null;
+    private DcMotor outtakeMotor = null;
+    private Servo outtakeServo = null;
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch        = 25.4f;
@@ -277,9 +287,11 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
+            String currentImage = null;
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
+                    currentImage = trackable.getName();
+                    telemetry.addData("Visible Target", currentImage);
                     targetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
@@ -290,10 +302,35 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
                     }
                     break;
                 }
+                else
+                {
+                    currentImage = null;
+                }
             }
+
 
             // Provide feedback as to where the robot is located (if we know).
             if (targetVisible) {
+                if (currentImage == "Blue-Rover"){
+                    driveForward(0.5,200);
+                    turnRight(0.5,100);
+                    driveForward(0.5,400);
+                }
+                if (currentImage == "Red-Footprint"){
+                    driveForward(0.5,200);
+                    turnLeft(0.5,100);
+                    driveForward(0.5,400);
+                }
+                if (currentImage == "Front-Craters"){
+                    driveForward(0.5,200);
+                    turnRight(0.5,100);
+                    driveForward(0.5,400);
+                }
+                if (currentImage == "Back-Space"){
+                    driveForward(0.5,200);
+                    turnLeft(0.5,100);
+                    driveForward(0.5,400);
+                }
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
@@ -308,5 +345,33 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             }
             telemetry.update();
         }
+
+    }
+    public void driveForward(double power,long t) {
+        while (opModeIsActive() && (runtime.seconds() < t)) {
+            leftDrive.setPower(power);
+            leftDriveBack.setPower(power);
+            rightDrive.setPower(power);
+            rightDriveBack.setPower(power);
+        }
+    }
+
+    public void turnRight(double power,long t) {
+        while (opModeIsActive() && (runtime.seconds() < t)) {
+            leftDrive.setPower(power);
+            leftDriveBack.setPower(power);
+            rightDrive.setPower(-power);
+            rightDriveBack.setPower(-power);
+        }
+    }
+
+    public void turnLeft(double power,long t) {
+        while (opModeIsActive() && (runtime.seconds() < t)) {
+            leftDrive.setPower(-power);
+            leftDriveBack.setPower(-power);
+            rightDrive.setPower(power);
+            rightDriveBack.setPower(power);
+        }
+
     }
 }
