@@ -112,10 +112,13 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY = "ASQxnDP/////AAABmZKDlU8qYE5AsKZB24eTmZ11g2pruoCbAssBRVQ3lSpCC3CcmVUaJbLLKAqvOK1pr53UbpswNWkqXuyNNgbFXKZmQ8AGLur4fRcOIokYNyYdULKbpbtqteHSX6P6BjxjJnhWGHIhXqkDQsXZP986D4LmJaZDx4bjg9ZkqQd7bbv59UWmkbkd1gfTMHRWO8/fRvw+Z5tWbU+El65fPoLHvCuqYGv+vLkINbJ4inCDIWIqkvvun1GiYIaKRHf5ERn9wZsu4nLGOiCSO+2g49SzooY35JTmUjmnvXHRDpgQkWlDReR7owfoJN4PLwQzkczPtaWu3va8ME86AfGBv7Ii1sW1E6ZxEDSjB/gni2hn3g4o";
+    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
+    private DcMotor leftDriveMid = null;
     private DcMotor leftDriveBack = null;
     private DcMotor rightDriveBack = null;
+    private DcMotor rightDriveMid = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
@@ -150,21 +153,23 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDriveMid = hardwareMap.get (DcMotor.class, "left_drive_mid");
         leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        rightDriveMid = hardwareMap.get (DcMotor.class, "right_drive_mid");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
-        outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
         outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftDriveMid.setDirection(DcMotor.Direction.FORWARD);
         leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDriveMid.setDirection(DcMotor.Direction.REVERSE);
         rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-        outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -370,28 +375,34 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
     }
     public void driveForward(double power,long t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(power);
-            leftDriveBack.setPower(power);
-            rightDrive.setPower(power);
-            rightDriveBack.setPower(power);
+            leftDrive.setPower(-power);
+            leftDriveMid.setPower(-power);
+            leftDriveBack.setPower(-power);
+            rightDrive.setPower(-power);
+            rightDriveMid.setPower(-power);
+            rightDriveBack.setPower(-power);
         }
     }
 
     public void turnRight(double power,long t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(power);
-            leftDriveBack.setPower(power);
-            rightDrive.setPower(-power);
-            rightDriveBack.setPower(-power);
+            leftDrive.setPower(-power);
+            leftDriveMid.setPower(-power);
+            leftDriveBack.setPower(-power);
+            rightDrive.setPower(power);
+            rightDriveMid.setPower(power);
+            rightDriveBack.setPower(power);
         }
     }
 
     public void turnLeft(double power,long t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(-power);
-            leftDriveBack.setPower(-power);
-            rightDrive.setPower(power);
-            rightDriveBack.setPower(power);
+            leftDrive.setPower(power);
+            leftDriveMid.setPower(power);
+            leftDriveBack.setPower(power);
+            rightDrive.setPower(-power);
+            rightDriveMid.setPower(-power);
+            rightDriveBack.setPower(-power);
         }
 
     }

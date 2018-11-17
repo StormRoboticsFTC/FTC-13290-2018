@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,9 +51,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOpv1.01", group="Linear Opmode")
+@TeleOp(name="TeleOpv0.9", group="Linear Opmode")
 //@Disabled
-public class TestOpv2 extends LinearOpMode {
+public class testOpv1 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -77,23 +76,23 @@ public class TestOpv2 extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDriveMid = hardwareMap.get (DcMotor.class, "left_drive_mid");
         leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        rightDriveMid = hardwareMap.get (DcMotor.class, "right_drive_mid");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
-        outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
         outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDriveMid = hardwareMap.get (DcMotor.class, "left_drive_mid");
+        leftDriveMid.setDirection(DcMotor.Direction.FORWARD);
         leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDriveMid = hardwareMap.get (DcMotor.class, "right_drive_mid");
+        rightDriveMid.setDirection(DcMotor.Direction.REVERSE);
         rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
-        outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -117,9 +116,9 @@ public class TestOpv2 extends LinearOpMode {
             double driveReverse = -gamepad1.left_trigger;
             double turn  =  gamepad1.left_stick_x;
             leftPowerForward    = Range.clip(driveForward + turn, -1.0, 1.0) ;
-            rightPowerForward   = Range.clip(driveForward - turn, -1.0, 1.0) ;
+            rightPowerForward   = Range.clip(driveForward - turn, -1.0, 1.0)+0.1 ;
             leftPowerReverse   = Range.clip(driveReverse + turn, -1.0, 1.0) ;
-            rightPowerReverse   = Range.clip(driveReverse - turn, -1.0, 1.0) ;
+            rightPowerReverse   = Range.clip(driveReverse - turn, -1.0, 1.0)+0.1 ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -157,22 +156,11 @@ public class TestOpv2 extends LinearOpMode {
             }
             else {intakeMotor.setPower(0);}
 
-            if (gamepad2.y) {
-                outtakeMotor.setPower(1);
-            }else if (gamepad2.a){
-                outtakeMotor.setPower(-1);
-            }
-            else {outtakeMotor.setPower(0);}
 
-            if (gamepad2.dpad_left) {
-                outtakeServo.setPosition(0);
-            }
-            else if (gamepad2.dpad_right) {
-                outtakeServo.setPosition (-1);
-            }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerForward, rightPowerForward);
+            telemetry.addData("Motors"
+, "left (%.2f), right (%.2f)", leftPowerForward, rightPowerForward);
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerReverse, rightPowerReverse);
             telemetry.update();
         }
