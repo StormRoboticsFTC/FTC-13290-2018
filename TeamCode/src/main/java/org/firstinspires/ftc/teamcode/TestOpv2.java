@@ -59,10 +59,8 @@ public class TestOpv2 extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
-    private DcMotor leftDriveMid = null;
     private DcMotor leftDriveBack = null;
     private DcMotor rightDriveBack = null;
-    private DcMotor rightDriveMid = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
@@ -87,10 +85,8 @@ public class TestOpv2 extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDriveMid = hardwareMap.get (DcMotor.class, "left_drive_mid");
         leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDriveMid = hardwareMap.get (DcMotor.class, "right_drive_mid");
         rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
         outtakeMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -129,24 +125,18 @@ public class TestOpv2 extends LinearOpMode {
             // Send calculated power to wheels
             if (gamepad1.right_trigger > 0) {
                 leftDrive.setPower(-leftPowerForward);
-                leftDriveMid.setPower(-leftPowerForward);
                 leftDriveBack.setPower(-leftPowerForward);
                 rightDrive.setPower(-rightPowerForward);
-                rightDriveMid.setPower(-rightPowerForward);
                 rightDriveBack.setPower(-rightPowerForward);
             } else if (gamepad1.left_trigger > 0) {
                 leftDrive.setPower(-leftPowerReverse);
-                leftDriveMid.setPower(-leftPowerReverse);
                 leftDriveBack.setPower(-leftPowerReverse);
                 rightDrive.setPower(-rightPowerReverse);
-                rightDriveMid.setPower (-rightPowerReverse);
                 rightDriveBack.setPower(-rightPowerReverse);
             } else {
                 leftDrive.setPower(-leftPowerForward);
-                leftDriveMid.setPower(-leftPowerForward);
                 leftDriveBack.setPower(-leftPowerForward);
                 rightDrive.setPower(-rightPowerForward);
-                rightDriveMid.setPower(-rightPowerForward);
                 rightDriveBack.setPower(-rightPowerForward);
             }
 

@@ -58,10 +58,8 @@ public class testOpv1 extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
-    private DcMotor leftDriveMid = null;
     private DcMotor leftDriveBack = null;
     private DcMotor rightDriveBack = null;
-    private DcMotor rightDriveMid = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
@@ -76,10 +74,8 @@ public class testOpv1 extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        leftDriveMid = hardwareMap.get (DcMotor.class, "left_drive_mid");
         leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        rightDriveMid = hardwareMap.get (DcMotor.class, "right_drive_mid");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
         outtakeServo = hardwareMap.servo.get("outtake_servo");
@@ -87,10 +83,8 @@ public class testOpv1 extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDriveMid.setDirection(DcMotor.Direction.FORWARD);
         leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDriveMid.setDirection(DcMotor.Direction.REVERSE);
         rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -128,24 +122,18 @@ public class testOpv1 extends LinearOpMode {
             // Send calculated power to wheels
             if (gamepad1.right_trigger > 0) {
                 leftDrive.setPower(-leftPowerForward);
-                leftDriveMid.setPower(-leftPowerForward);
                 leftDriveBack.setPower(-leftPowerForward);
                 rightDrive.setPower(-rightPowerForward);
-                rightDriveMid.setPower(-rightPowerForward);
                 rightDriveBack.setPower(-rightPowerForward);
             } else if (gamepad1.left_trigger > 0) {
                 leftDrive.setPower(-leftPowerReverse);
-                leftDriveMid.setPower(-leftPowerReverse);
                 leftDriveBack.setPower(-leftPowerReverse);
                 rightDrive.setPower(-rightPowerReverse);
-                rightDriveMid.setPower (-rightPowerReverse);
                 rightDriveBack.setPower(-rightPowerReverse);
             } else {
                 leftDrive.setPower(-leftPowerForward);
-                leftDriveMid.setPower(-leftPowerForward);
                 leftDriveBack.setPower(-leftPowerForward);
                 rightDrive.setPower(-rightPowerForward);
-                rightDriveMid.setPower(-rightPowerForward);
                 rightDriveBack.setPower(-rightPowerForward);
             }
 
