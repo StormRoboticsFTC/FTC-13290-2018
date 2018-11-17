@@ -367,7 +367,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
 
     }
-    public void driveForward(double power,long t) {
+    public void driveForward(double power,double t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
             leftDrive.setPower(-power);
             leftDriveBack.setPower(-power);
@@ -376,7 +376,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
     }
 
-    public void turnRight(double power,long t) {
+    public void turnRight(double power,double t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
             leftDrive.setPower(-power);
             leftDriveBack.setPower(-power);
@@ -385,7 +385,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
     }
 
-    public void turnLeft(double power,long t) {
+    public void turnLeft(double power,double t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
             leftDrive.setPower(power);
             leftDriveBack.setPower(power);

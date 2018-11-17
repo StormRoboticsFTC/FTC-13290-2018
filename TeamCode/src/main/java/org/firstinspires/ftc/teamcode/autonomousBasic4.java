@@ -49,9 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Parking", group="Linear Opmode")
+@Autonomous(name="Parking turn right", group="Linear Opmode")
 //@Disabled
-public class autonomousBasic2 extends LinearOpMode {
+public class autonomousBasic4 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -92,14 +92,34 @@ public class autonomousBasic2 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // Setup a variable for each drive wheel to save power level for telemetry
-            driveForward(1,2);
+            driveForward(1,3.5);
+            turnRight (1,0.4);
+            driveForward(1,5);
         }
 
     }
-    public void driveForward(double power,long t) {
+    public void driveForward(double power,double t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
             leftDrive.setPower(-power);
             leftDriveBack.setPower(-power);
+            rightDrive.setPower(-power);
+            rightDriveBack.setPower(-power);
+        }
+    }
+
+    public void turnRight(double power,double t) {
+        while (opModeIsActive() && (runtime.seconds() < t)) {
+            leftDrive.setPower(-power);
+            leftDriveBack.setPower(-power);
+            rightDrive.setPower(power);
+            rightDriveBack.setPower(power);
+        }
+    }
+
+    public void turnLeft(double power,double t) {
+        while (opModeIsActive() && (runtime.seconds() < t)) {
+            leftDrive.setPower(power);
+            leftDriveBack.setPower(power);
             rightDrive.setPower(-power);
             rightDriveBack.setPower(-power);
         }

@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Basic Autonomous", group="Linear Opmode")
+@Autonomous(name="Claim Marker", group="Linear Opmode")
 //@Disabled
 public class autonomousBasic extends LinearOpMode {
 
@@ -62,7 +62,6 @@ public class autonomousBasic extends LinearOpMode {
     private DcMotor rightDriveBack = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
-    private DcMotor outtakeMotor = null;
     private Servo outtakeServo = null;
 
     @Override
@@ -94,14 +93,13 @@ public class autonomousBasic extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            outtakeServo.setPosition(-1);
             // Setup a variable for each drive wheel to save power level for telemetry
-            driveForward(1,4);
+            driveForward(1,2);
             dropMarker (1);
         }
 
     }
-    public void driveForward(double power,long t) {
+    public void driveForward(double power,double t) {
         while (opModeIsActive() && (runtime.seconds() < t)) {
             leftDrive.setPower(-power);
             leftDriveBack.setPower(-power);
