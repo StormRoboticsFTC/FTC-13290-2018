@@ -367,31 +367,105 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
 
     }
-    public void driveForward(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(-power);
-            leftDriveBack.setPower(-power);
-            rightDrive.setPower(-power);
-            rightDriveBack.setPower(-power);
+    public void drop(double power, int ticks) { //1120 ticks per rotation for AndyMark
+        outtakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor.setTargetPosition(ticks);
+        outtakeMotor.setPower(power);
+
+        while (outtakeMotor.isBusy()) {
+        }
+
+        outtakeMotor.setPower(0);
+        outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void driveForward(double power, int ticks) { //also 1120 ticks per rotation for each rotation for HD HEX Motor (40:1 Gear Reduction)
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(-power);
+        leftDriveBack.setPower(-power);
+        rightDrive.setPower(-power);
+        rightDriveBack.setPower(-power);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
+        }
+
+        leftDrive.setPower(0);
+        leftDriveBack.setPower(0);
+        rightDrive.setPower(0);
+        rightDriveBack.setPower(0);
+
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+
+    public void dropMarker(double power) {
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
+            intakeMotor.setPower(-power);
         }
     }
 
-    public void turnRight(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(-power);
-            leftDriveBack.setPower(-power);
-            rightDrive.setPower(power);
-            rightDriveBack.setPower(power);
+    public void turnRight(double power, int ticks) {
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(-power);
+        leftDriveBack.setPower(-power);
+        rightDrive.setPower(power);
+        rightDriveBack.setPower(power);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
         }
+
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void turnLeft(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(power);
-            leftDriveBack.setPower(power);
-            rightDrive.setPower(-power);
-            rightDriveBack.setPower(-power);
+    public void turnLeft(double power, int ticks) {
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(power);
+        leftDriveBack.setPower(power);
+        rightDrive.setPower(-power);
+        rightDriveBack.setPower(-power);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
         }
 
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
+
+
+
