@@ -416,7 +416,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         }
     }
 
-    public void turnRight(double power, int ticks) {
+    public void turnRight(double power, int ticks) { //also 1120 ticks per rotation for each rotation for HD HEX Motor
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -441,7 +441,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void turnLeft(double power, int ticks) {
+    public void turnLeft(double power, int ticks) { //also 1120 ticks per rotation for each rotation for HD HEX Motor
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
