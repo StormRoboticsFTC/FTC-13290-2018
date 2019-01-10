@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -64,7 +63,6 @@ public class TestOpv2 extends LinearOpMode {
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
-    private Servo outtakeServo = null;
 
     @Override
     public void runOpMode() {
@@ -80,7 +78,6 @@ public class TestOpv2 extends LinearOpMode {
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
         outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
-        outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -97,7 +94,6 @@ public class TestOpv2 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            outtakeServo.setPosition(-1);
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPowerForward;
             double rightPowerForward;
@@ -148,18 +144,12 @@ public class TestOpv2 extends LinearOpMode {
             else {intakeMotor.setPower(0);}
 
             if (gamepad2.y) {
-                outtakeMotor.setPower(1);
+                outtakeMotor.setPower(0.75);
             }else if (gamepad2.a){
-                outtakeMotor.setPower(-1);
+                outtakeMotor.setPower(-0.75);
             }
             else {outtakeMotor.setPower(0);}
 
-            if (gamepad2.dpad_left) {
-                outtakeServo.setPosition(0);
-            }
-            else if (gamepad2.dpad_right) {
-                outtakeServo.setPosition (-1);
-            }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPowerForward, rightPowerForward);

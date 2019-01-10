@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -120,7 +119,6 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
-    private Servo outtakeServo = null;
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -155,7 +153,6 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
-        outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -308,9 +305,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             String currentImage = null;
-            driveForward(1,500);
-            turnLeft(1,1000);
-            driveForward(1,1000);
+            driveForward(1,500); //drive forward 500 ticks of the motor at full power
+            turnLeft(1,1000); //turn 1000 ticks left of the motor at full power
+            driveForward(1,1000); //drive forward 1000 ticks of the motor at full power
 
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
@@ -334,7 +331,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
 
             // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
+            if (targetVisible) { //call driving methods based on image detected
                 if (currentImage == "Blue-Rover"){
                     turnRight(0.5,1);
                     driveForward(0.5,4);

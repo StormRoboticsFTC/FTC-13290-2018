@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -63,7 +62,6 @@ public class testOpv1 extends LinearOpMode {
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
     private DcMotor outtakeMotor = null;
-    private Servo outtakeServo = null;
 
     @Override
     public void runOpMode() {
@@ -78,7 +76,6 @@ public class testOpv1 extends LinearOpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
-        outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -94,7 +91,6 @@ public class testOpv1 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            outtakeServo.setPosition(-1);
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPowerForward;
             double rightPowerForward;

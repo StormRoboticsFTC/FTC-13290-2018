@@ -30,9 +30,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -49,8 +49,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Parking turn right", group="Linear Opmode")
-//@Disabled
+@Autonomous(name="Depot Side Red", group="Linear Opmode")
+@Disabled
 public class autonomousBasic4 extends LinearOpMode {
 
     // Declare OpMode members.
@@ -60,7 +60,7 @@ public class autonomousBasic4 extends LinearOpMode {
     private DcMotor rightDriveBack = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
-    private Servo outtakeServo = null;
+    private DcMotor outtakeMotor = null;
 
     @Override
     public void runOpMode() {
@@ -70,13 +70,18 @@ public class autonomousBasic4 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         leftDriveBack = hardwareMap.get(DcMotor.class, "left_drive_back");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
-        intakeMotor = hardwareMap.get(DcMotor.class,"intake_motor");
-        outtakeServo = hardwareMap.servo.get("outtake_servo");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+        outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
 
+        leftDrive.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -92,41 +97,131 @@ public class autonomousBasic4 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // Setup a variable for each drive wheel to save power level for telemetry
-            driveForward(1,3.5);
-            turnRight (1,0.4);
-            driveForward(1,5);
+            drop(0.75, 4480);
+            driveForward(1, 1120);
+            dropMarker(1);
         }
 
     }
-    public void driveForward(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(-power);
-            leftDriveBack.setPower(-power);
-            rightDrive.setPower(-power);
-            rightDriveBack.setPower(-power);
+
+    public void drop(double power, int ticks) { //1120 ticks per rotation for AndyMark
+        outtakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor.setTargetPosition(ticks);
+        outtakeMotor.setPower(power);
+        outtakeMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        //outtakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (outtakeMotor.isBusy()) {
         }
+
+        outtakeMotor.setPower(0);
     }
 
-    public void turnRight(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(-power);
-            leftDriveBack.setPower(-power);
-            rightDrive.setPower(power);
-            rightDriveBack.setPower(power);
+    public void driveForward(double power, int ticks) { //also 1120 ticks per rotation for each rotation for HD HEX Motor (40:1 Gear Reduction)
+
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(-power);
+        leftDriveBack.setPower(-power);
+        rightDrive.setPower(-power);
+        rightDriveBack.setPower(-power);
+
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
         }
+
+        leftDrive.setPower(0);
+        leftDriveBack.setPower(0);
+        rightDrive.setPower(0);
+        rightDriveBack.setPower(0);
+
     }
 
-    public void turnLeft(double power,double t) {
-        while (opModeIsActive() && (runtime.seconds() < t)) {
-            leftDrive.setPower(power);
-            leftDriveBack.setPower(power);
-            rightDrive.setPower(-power);
-            rightDriveBack.setPower(-power);
+
+    public void dropMarker(double power) {
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
+            intakeMotor.setPower(power);
         }
-}
-    public void dropMarker (double power) {
-        while (opModeIsActive() && (runtime.seconds() < 2)) {
-            intakeMotor.setPower(-power);
+        intakeMotor.setPower(0);
+    }
+
+    public void turnRight(double power, int ticks) {
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(-power);
+        leftDriveBack.setPower(-power);
+        rightDrive.setPower(power);
+        rightDriveBack.setPower(power);
+
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.hRUN_TO_POSITION);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
         }
+
+
+    }
+
+    public void turnLeft(double power, int ticks) {
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightDrive.setTargetPosition(ticks);
+        rightDriveBack.setTargetPosition(ticks);
+        leftDrive.setTargetPosition(ticks);
+        leftDriveBack.setTargetPosition(ticks);
+
+        leftDrive.setPower(power);
+        leftDriveBack.setPower(power);
+        rightDrive.setPower(-power);
+        rightDriveBack.setPower(-power);
+
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
+        }
+
+        rightDrive.setPower(0);
+        rightDriveBack.setPower(0);
+        leftDrive.setPower(0);
+        leftDriveBack.setPower(0);
     }
 }

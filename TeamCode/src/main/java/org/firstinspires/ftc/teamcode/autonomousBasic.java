@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Claim Marker", group="Linear Opmode")
+@Autonomous(name="Crater Side", group="Linear Opmode")
 //@Disabled
 public class autonomousBasic extends LinearOpMode {
 
@@ -62,7 +62,6 @@ public class autonomousBasic extends LinearOpMode {
     private DcMotor rightDriveBack = null;
     private DcMotor rightDrive = null;
     private DcMotor intakeMotor = null;
-    private Servo outtakeServo = null;
     private DcMotor outtakeMotor = null;
 
     @Override
@@ -79,7 +78,6 @@ public class autonomousBasic extends LinearOpMode {
         rightDriveBack = hardwareMap.get(DcMotor.class, "right_drive_back");
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
         outtakeMotor = hardwareMap.get(DcMotor.class, "outtake_motor");
-        outtakeServo = hardwareMap.servo.get("outtake_servo");
 
         leftDrive.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         leftDriveBack.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
@@ -88,10 +86,10 @@ public class autonomousBasic extends LinearOpMode {
         outtakeMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDriveBack.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDriveBack.setDirection(DcMotor.Direction.REVERSE);
+        leftDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftDriveBack.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDriveBack.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
@@ -101,9 +99,10 @@ public class autonomousBasic extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             // Setup a variable for each drive wheel to save power level for telemetry
-            drop(1, 4480);
-            driveForward(1, 8);
+            drop(0.75, 4480);
+            driveForward(1, 1120);
             dropMarker(1);
+            stopAll();
         }
 
     }
@@ -112,15 +111,17 @@ public class autonomousBasic extends LinearOpMode {
        outtakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
        outtakeMotor.setTargetPosition(ticks);
        outtakeMotor.setPower(power);
+       outtakeMotor.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+       //outtakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-       while (outtakeMotor.isBusy()) {
+        while (outtakeMotor.isBusy()) {
        }
 
        outtakeMotor.setPower(0);
-       outtakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void driveForward(double power, int ticks) { //also 1120 ticks per rotation for each rotation for HD HEX Motor (40:1 Gear Reduction)
+
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -136,6 +137,14 @@ public class autonomousBasic extends LinearOpMode {
         rightDrive.setPower(-power);
         rightDriveBack.setPower(-power);
 
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
         }
 
@@ -144,17 +153,14 @@ public class autonomousBasic extends LinearOpMode {
         rightDrive.setPower(0);
         rightDriveBack.setPower(0);
 
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
 
     public void dropMarker(double power) {
         while (opModeIsActive() && (runtime.seconds() < 3)) {
-            intakeMotor.setPower(-power);
+            intakeMotor.setPower(power);
         }
+        intakeMotor.setPower(0);
     }
 
     public void turnRight(double power, int ticks) {
@@ -170,16 +176,22 @@ public class autonomousBasic extends LinearOpMode {
 
         leftDrive.setPower(-power);
         leftDriveBack.setPower(-power);
-        rightDrive.setPower(power);
-        rightDriveBack.setPower(power);
-
-        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
-        }
+        rightDrive.setPower(-power);
+        rightDriveBack.setPower(-power);
 
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
+        }
+
+
     }
 
     public void turnLeft(double power, int ticks) {
@@ -198,12 +210,30 @@ public class autonomousBasic extends LinearOpMode {
         rightDrive.setPower(-power);
         rightDriveBack.setPower(-power);
 
-        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
-        }
-
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDriveBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //rightDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //leftDriveBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (leftDrive.isBusy()&&leftDriveBack.isBusy()&&rightDrive.isBusy()&&rightDriveBack.isBusy()) {
+        }
+
+        rightDrive.setPower(0);
+        rightDriveBack.setPower(0);
+        leftDrive.setPower(0);
+        leftDriveBack.setPower(0);
+        }
+        public void stopAll() {
+            rightDrive.setPower(0);
+            rightDriveBack.setPower(0);
+            leftDrive.setPower(0);
+            leftDriveBack.setPower(0);
+            intakeMotor.setPower(0);
+
+
         }
     }
